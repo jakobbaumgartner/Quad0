@@ -19,4 +19,3 @@ function serialoutput = one_line(serialinput)
     
     serialoutput = char(serialinput(starting:ending));
 end
-

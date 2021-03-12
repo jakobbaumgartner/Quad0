@@ -8,8 +8,8 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/Jakob/Documents/GitHub/Gyro test/Gyro-test/include",
-                "C:/Users/Jakob/Documents/GitHub/Gyro test/Gyro-test/src",
+                "C:/Users/Jakob/Documents/GitHub/Quad0/Gyro test/Gyro test arduino/include",
+                "C:/Users/Jakob/Documents/GitHub/Quad0/Gyro test/Gyro test arduino/src",
                 "C:/Users/Jakob/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "C:/Users/Jakob/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/Jakob/.platformio/packages/framework-arduino-avr/variants/mega",
@@ -22,8 +22,8 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/Jakob/Documents/GitHub/Gyro test/Gyro-test/include",
-                    "C:/Users/Jakob/Documents/GitHub/Gyro test/Gyro-test/src",
+                    "C:/Users/Jakob/Documents/GitHub/Quad0/Gyro test/Gyro test arduino/include",
+                    "C:/Users/Jakob/Documents/GitHub/Quad0/Gyro test/Gyro test arduino/src",
                     "C:/Users/Jakob/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "C:/Users/Jakob/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/Jakob/.platformio/packages/framework-arduino-avr/variants/mega",
