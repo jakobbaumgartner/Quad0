@@ -1,1 +1,0 @@
-Base includes program files for controlling the quad with a remote and for gyro sensors and closed control loop.
