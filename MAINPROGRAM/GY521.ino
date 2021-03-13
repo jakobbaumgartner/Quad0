@@ -11,6 +11,8 @@ int16_t gyroX, gyroY, gyroZ;
 int16_t gyroXDgps, gyroYDgps, gyroZDgps;
 
 void calibrateGyroError () {
+// calibrateGyroError() - calculate gyro error at 0 deg/s.
+
   float gyroErrorX = 0;
   float gyroErrorY = 0;
   float gyroErrorZ = 0;
@@ -48,6 +50,8 @@ void calibrateGyroError () {
 }
 
 void setGyro () {
+  // setGyro() - gyro setup routine, sets sensitivity and begins transmission
+
   Wire.begin();
   // Begins a transmission to the I2C slave (GY-521 board).
 	Wire.beginTransmission(MPU_ADDR); 
@@ -59,7 +63,7 @@ void setGyro () {
 
   // Begins a transmission to the I2C slave (GY-521 board).
 	Wire.beginTransmission(MPU_ADDR); 
-  // GYRO_CONFIG register.
+  // GYRO_CONFIG register - set sensitivity.
 	Wire.write(0x1B); 
   // Send new values.
   Wire.write(0x10); 
@@ -68,6 +72,8 @@ void setGyro () {
 }
 
 void readGyroDgps (float gyroValuesDgps [], float gyroDgpsError []) {
+// readGyroDgps() - read deg/s from gyro and write them into global variables
+
   Wire.beginTransmission(MPU_ADDR);
   // Starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
 	Wire.write(0x3B); 

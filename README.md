@@ -1,2 +1,2 @@
-# Quad0
+# Quad
 Quadcopter repo.
