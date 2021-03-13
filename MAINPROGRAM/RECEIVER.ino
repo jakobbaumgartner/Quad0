@@ -1,5 +1,6 @@
 // RECEIVER functionality: read raw values, convert them into rate curves (for yaw, pitch and roll) and map throttle.
-// GLOBAL VARIABLES: float throttle, float yaw, float pitch, float roll, bool isArmed.
+// GLOBAL FUNCTIONS: void Receiver().
+// GLOBAL VARIABLES: float Throttle, float Yaw, float Pitch, float Roll, bool IsArmed.
 // Throttle -> ch 2, Yaw -> ch3, Pitch -> ch 1, Roll -> ch 0, Arm -> ch 4.
 
 // Upper mapped throttle boundary.
@@ -10,7 +11,8 @@ int maxRadioInput = 450;
 // Middle value offset.
 int midValueOffset = 20;
 
-void receiver(){
+// Read raw values from receiver and convert them in [us] pulses (throttle) and reference [deg/s] pids inputs (yaw, pitch, roll).
+void Receiver(){
   // Read raw receiver input.
   int throttleRaw = pulseIn(5, HIGH);
   int yawRaw = pulseIn(4, HIGH);
@@ -31,18 +33,18 @@ void receiver(){
   rollMap = lowHighCut(rollMap, minRadioInput, maxRadioInput);
   
   // Set mid point values of inputs (0 and 1500).
-  throttle = calibrateMidPoint(throttleMap, 1500);
+  Throttle = calibrateMidPoint(throttleMap, 1500);
   yawMap = calibrateMidPoint(yawMap, 0);
   pitchMap = calibrateMidPoint(pitchMap, 0);
   rollMap = calibrateMidPoint(rollMap, 0);
 
   // Convert to third order polynomial curve (rate curves).
   // Min/max value cca +/- 1080.
-  yaw = 0.00000664 * pow(yawMap, 3) + 0.000002 * pow(yawMap, 2) + yawMap;
-  pitch = 0.00000664 * pow(pitchMap, 3) + 0.000002 * pow(pitchMap, 2) + pitchMap;
-  roll = 0.00000664 * pow(rollMap, 3) + 0.000002 * pow(rollMap, 2) + rollMap;
+  Yaw = 0.00000664 * pow(yawMap, 3) + 0.000002 * pow(yawMap, 2) + yawMap;
+  Pitch = 0.00000664 * pow(pitchMap, 3) + 0.000002 * pow(pitchMap, 2) + pitchMap;
+  Roll = 0.00000664 * pow(rollMap, 3) + 0.000002 * pow(rollMap, 2) + rollMap;
 
-  isArmed = armRaw > 1500 ? true : false;  
+  IsArmed = armRaw > 1500 ? true : false;  
 }
 
 // Cut values lower than minValue and higher than maxValue.
