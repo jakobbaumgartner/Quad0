@@ -57,7 +57,7 @@ float lowHighCut(float input, int minValue, int maxValue){
   return input;
 }
 
-// Set midpoint to 1500 when joysticks are on middle.
+// Set midpoint to 1500 (throttle) or to 0 (yaw, pitch, roll) when joysticks are on middle.
 float calibrateMidPoint(float input, int midValue){
   if (input < midValue + midValueOffset && input > midValue - midValueOffset){
     input = midValue;
