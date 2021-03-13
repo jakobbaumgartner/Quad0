@@ -12,7 +12,6 @@ float gyroValuesDgps[3];
 float gyroDgpsError[3];
 
 // PID global variables.
-float kp, ki, kd;
 float yawPid, pitchPid, rollPid;
 
 // Loop time variables.
