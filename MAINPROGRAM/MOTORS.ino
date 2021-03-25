@@ -8,5 +8,8 @@ void MotorSetup(){
 }
 
 void MotorMixingAlgorithm(){
-  
+  Motor1.write(Throttle);
+  Motor2.write(Throttle);
+  Motor3.write(Throttle);
+  Motor4.write(Throttle);
 }

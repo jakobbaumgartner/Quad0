@@ -11,53 +11,136 @@ int maxRadioInput = 450;
 // Middle value offset.
 int midValueOffset = 20;
 
-// Read raw values from receiver and convert them in [us] pulses (throttle) and reference [deg/s] pids inputs (yaw, pitch, roll).
+int currentTime;
+int timerThrottle, timerYaw, timerPitch, timerRoll, timerArm;
+int lastValueThrottle, lastValueYaw, lastValuePitch, lastValueRoll, lastValueArm;
+
+
+void InterruptSetup(){
+  // Throttle
+  attachInterrupt(digitalPinToInterrupt(5), Receiver, CHANGE);
+  // Yaw
+  attachInterrupt(digitalPinToInterrupt(4), Receiver, CHANGE);
+  // Pitch
+  attachInterrupt(digitalPinToInterrupt(6), Receiver, CHANGE);
+  // Roll
+  attachInterrupt(digitalPinToInterrupt(7), Receiver, CHANGE);
+  // Arm
+  attachInterrupt(digitalPinToInterrupt(3), Receiver, CHANGE); 
+
+  Serial.println("Interrupt enabled");
+}
+
 void Receiver(){
-  // Read raw receiver input.
-  int throttleRaw = pulseIn(5, HIGH);
-  int yawRaw = pulseIn(4, HIGH);
-  int pitchRaw = pulseIn(6, HIGH);
-  int rollRaw = pulseIn(7, HIGH);
-  int armRaw = pulseIn(3, HIGH);
+  currentTime = micros();
 
-  // Map raw values.
-  float throttleMap = map(throttleRaw, 986, 1945, 1000, 2000);
-  float yawMap = map(yawRaw, 986, 1962, minRadioInput, maxRadioInput); 
-  float pitchMap = map(pitchRaw, 995, 1972, minRadioInput, maxRadioInput);
-  float rollMap = map(rollRaw, 1018, 1989, minRadioInput, maxRadioInput);
-
-  // Cut lower or higher values than maximum or minimum values.
-  throttleMap = lowHighCut(throttleMap, 1000, maxThrottle);
-  yawMap = lowHighCut(yawMap, minRadioInput, maxRadioInput);
-  pitchMap = lowHighCut(pitchMap, minRadioInput, maxRadioInput);
-  rollMap = lowHighCut(rollMap, minRadioInput, maxRadioInput);
-  
-  // Set mid point values of inputs (0 and 1500).
-  Throttle = calibrateMidPoint(throttleMap, 1500);
-  yawMap = calibrateMidPoint(yawMap, 0);
-  pitchMap = calibrateMidPoint(pitchMap, 0);
-  rollMap = calibrateMidPoint(rollMap, 0);
-
-  // Convert to third order polynomial curve (rate curves).
-  // Min/max value cca +/- 1080.
-  Yaw = 0.00000664 * pow(yawMap, 3) + 0.000002 * pow(yawMap, 2) + yawMap;
-  Pitch = 0.00000664 * pow(pitchMap, 3) + 0.000002 * pow(pitchMap, 2) + pitchMap;
-  Roll = 0.00000664 * pow(rollMap, 3) + 0.000002 * pow(rollMap, 2) + rollMap;
-
-  IsArmed = armRaw > 1500 ? true : false;  
-}
-
-// Cut values lower than minValue and higher than maxValue.
-float lowHighCut(float input, int minValue, int maxValue){
-  if (input > maxValue){
-    input = maxValue;
+  // Throttle
+  if (digitalRead(5)){
+    if(lastValueThrottle == 0){
+      lastValueThrottle = 1;
+      timerThrottle = currentTime;
+    }
   }
-  if (input < minRadioInput){
-    input = minValue;
+  else if(lastValueThrottle == 1){
+    lastValueThrottle = 0;
+    ReceiverInputs[0] = currentTime - timerThrottle;
   }
 
-  return input;
+  // Yaw
+  if (digitalRead(4)){
+    if(lastValueYaw == 0){
+      lastValueYaw = 1;
+      timerYaw = currentTime;
+    }
+  }
+  else if(lastValueYaw == 1){
+    lastValueYaw = 0;
+    ReceiverInputs[1] = currentTime - timerYaw;
+  }
+
+  // Pitch
+  if (digitalRead(6)){
+    if(lastValuePitch == 0){
+      lastValuePitch = 1;
+      timerPitch = currentTime;
+    }
+  }
+  else if(lastValuePitch == 1){
+    lastValuePitch = 0;
+    ReceiverInputs[2] = currentTime - timerPitch;
+  }
+
+  // Roll
+  if (digitalRead(7)){
+    if(lastValueRoll == 0){
+      lastValueRoll = 1;
+      timerRoll = currentTime;
+    }
+  }
+  else if(lastValueRoll == 1){
+    lastValueRoll = 0;
+    ReceiverInputs[3] = currentTime - timerRoll;
+  }
+
+  // Arm
+  if (digitalRead(3)){
+    if(lastValueArm == 0){
+      lastValueArm = 1;
+      timerArm = currentTime;
+    }
+  }
+  else if(lastValueArm == 1){
+    lastValueArm = 0;
+    ReceiverInputs[4] = currentTime - timerArm;
+  }
 }
+// Read raw values from receiver and convert them in [us] pulses (throttle) and reference [deg/s] pids inputs (yaw, pitch, roll).
+//void Receiver(){
+//  // Read raw receiver input.
+//  int throttleRaw = pulseIn(5, HIGH);
+//  int yawRaw = pulseIn(4, HIGH, 2000);
+//  int pitchRaw = pulseIn(6, HIGH, 2000);
+//  int rollRaw = pulseIn(7, HIGH, 2000);
+//  int armRaw = pulseIn(3, HIGH, 2000);
+//
+//  // Map raw values.
+//  float throttleMap = map(throttleRaw, 986, 1945, 1000, 2000);
+//  float yawMap = map(yawRaw, 986, 1962, minRadioInput, maxRadioInput); 
+//  float pitchMap = map(pitchRaw, 995, 1972, minRadioInput, maxRadioInput);
+//  float rollMap = map(rollRaw, 1018, 1989, minRadioInput, maxRadioInput);
+//
+//  // Cut lower or higher values than maximum or minimum values.
+//  throttleMap = lowHighCut(throttleMap, 1000, maxThrottle);
+//  yawMap = lowHighCut(yawMap, minRadioInput, maxRadioInput);
+//  pitchMap = lowHighCut(pitchMap, minRadioInput, maxRadioInput);
+//  rollMap = lowHighCut(rollMap, minRadioInput, maxRadioInput);
+//  
+//  // Set mid point values of inputs (0 and 1500).
+//  Throttle = calibrateMidPoint(throttleMap, 1500);
+//  yawMap = calibrateMidPoint(yawMap, 0);
+//  pitchMap = calibrateMidPoint(pitchMap, 0);
+//  rollMap = calibrateMidPoint(rollMap, 0);
+//
+//  // Convert to third order polynomial curve (rate curves).
+//  // Min/max value cca +/- 1080.
+//  Yaw = 0.00000664 * pow(yawMap, 3) + 0.000002 * pow(yawMap, 2) + yawMap;
+//  Pitch = 0.00000664 * pow(pitchMap, 3) + 0.000002 * pow(pitchMap, 2) + pitchMap;
+//  Roll = 0.00000664 * pow(rollMap, 3) + 0.000002 * pow(rollMap, 2) + rollMap;
+//
+//  IsArmed = armRaw > 1500 ? true : false;  
+//}
+//
+//// Cut values lower than minValue and higher than maxValue.
+//float lowHighCut(float input, int minValue, int maxValue){
+//  if (input > maxValue){
+//    input = maxValue;
+//  }
+//  if (input < minRadioInput){
+//    input = minValue;
+//  }
+//
+//  return input;
+//}
 
 // Set midpoint to 1500 (throttle) or to 0 (yaw, pitch, roll) when joysticks are on middle.
 float calibrateMidPoint(float input, int midValue){
