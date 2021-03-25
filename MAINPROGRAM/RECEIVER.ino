@@ -17,25 +17,18 @@ int lastValueThrottle, lastValueYaw, lastValuePitch, lastValueRoll, lastValueArm
 
 
 void InterruptSetup(){
-  // Throttle
-  attachInterrupt(digitalPinToInterrupt(5), Receiver, CHANGE);
-  // Yaw
-  attachInterrupt(digitalPinToInterrupt(4), Receiver, CHANGE);
-  // Pitch
-  attachInterrupt(digitalPinToInterrupt(6), Receiver, CHANGE);
-  // Roll
-  attachInterrupt(digitalPinToInterrupt(7), Receiver, CHANGE);
-  // Arm
-  attachInterrupt(digitalPinToInterrupt(3), Receiver, CHANGE); 
-
+  // Enable interrupts for pins 23:16.
+  PCICR = 0b00000100;
+  // Enable interrupts for pins D7:D3.
+  PCMSK2 = 0b11111000;
   Serial.println("Interrupt enabled");
 }
 
-void Receiver(){
-  currentTime = micros();
+ISR(PCINT2_vect){
+    currentTime = micros();
 
-  // Throttle
-  if (digitalRead(5)){
+  // Throttle (pin D5)
+  if (PIND & 0b00100000){
     if(lastValueThrottle == 0){
       lastValueThrottle = 1;
       timerThrottle = currentTime;
@@ -46,8 +39,8 @@ void Receiver(){
     ReceiverInputs[0] = currentTime - timerThrottle;
   }
 
-  // Yaw
-  if (digitalRead(4)){
+  // Yaw (pin D4)
+  if (PIND & 0b00010000){
     if(lastValueYaw == 0){
       lastValueYaw = 1;
       timerYaw = currentTime;
@@ -58,8 +51,8 @@ void Receiver(){
     ReceiverInputs[1] = currentTime - timerYaw;
   }
 
-  // Pitch
-  if (digitalRead(6)){
+  // Pitch (pin D6)
+  if (PIND & 0b01000000){
     if(lastValuePitch == 0){
       lastValuePitch = 1;
       timerPitch = currentTime;
@@ -70,8 +63,8 @@ void Receiver(){
     ReceiverInputs[2] = currentTime - timerPitch;
   }
 
-  // Roll
-  if (digitalRead(7)){
+  // Roll (pin D7)
+  if (PIND & 0b10000000){
     if(lastValueRoll == 0){
       lastValueRoll = 1;
       timerRoll = currentTime;
@@ -82,8 +75,8 @@ void Receiver(){
     ReceiverInputs[3] = currentTime - timerRoll;
   }
 
-  // Arm
-  if (digitalRead(3)){
+  // Arm (pin D3)
+  if (PIND & 0b00001000){
     if(lastValueArm == 0){
       lastValueArm = 1;
       timerArm = currentTime;
@@ -94,6 +87,70 @@ void Receiver(){
     ReceiverInputs[4] = currentTime - timerArm;
   }
 }
+
+//void Receiver(){
+//  currentTime = micros();
+//
+//  // Throttle
+//  if (digitalRead(5)){
+//    if(lastValueThrottle == 0){
+//      lastValueThrottle = 1;
+//      timerThrottle = currentTime;
+//    }
+//  }
+//  else if(lastValueThrottle == 1){
+//    lastValueThrottle = 0;
+//    ReceiverInputs[0] = currentTime - timerThrottle;
+//  }
+//
+//  // Yaw
+//  if (digitalRead(4)){
+//    if(lastValueYaw == 0){
+//      lastValueYaw = 1;
+//      timerYaw = currentTime;
+//    }
+//  }
+//  else if(lastValueYaw == 1){
+//    lastValueYaw = 0;
+//    ReceiverInputs[1] = currentTime - timerYaw;
+//  }
+//
+//  // Pitch
+//  if (digitalRead(6)){
+//    if(lastValuePitch == 0){
+//      lastValuePitch = 1;
+//      timerPitch = currentTime;
+//    }
+//  }
+//  else if(lastValuePitch == 1){
+//    lastValuePitch = 0;
+//    ReceiverInputs[2] = currentTime - timerPitch;
+//  }
+//
+//  // Roll
+//  if (digitalRead(7)){
+//    if(lastValueRoll == 0){
+//      lastValueRoll = 1;
+//      timerRoll = currentTime;
+//    }
+//  }
+//  else if(lastValueRoll == 1){
+//    lastValueRoll = 0;
+//    ReceiverInputs[3] = currentTime - timerRoll;
+//  }
+//
+//  // Arm
+//  if (digitalRead(3)){
+//    if(lastValueArm == 0){
+//      lastValueArm = 1;
+//      timerArm = currentTime;
+//    }
+//  }
+//  else if(lastValueArm == 1){
+//    lastValueArm = 0;
+//    ReceiverInputs[4] = currentTime - timerArm;
+//  }
+//}
 // Read raw values from receiver and convert them in [us] pulses (throttle) and reference [deg/s] pids inputs (yaw, pitch, roll).
 //void Receiver(){
 //  // Read raw receiver input.

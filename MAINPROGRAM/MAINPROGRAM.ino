@@ -39,27 +39,24 @@ void loop(){
   time = millis();
   elapsedTime = (time - timePrev) / 1000;
   
-  // Read receiver input.
-  // Receiver();
   // Read gyro values.
   ReadGyroDgps();
   // Calculate PIDs.
   CalculatePid();
   // Write to motors.
-  Motor1.write(Throttle);
-  Motor2.write(Throttle);
-  Motor3.write(Throttle);
-  Motor4.write(Throttle);
+
   
-  Serial.print(ReceiverInputs[0]);
-  Serial.print("    ");
-  Serial.print(ReceiverInputs[1]);
-  Serial.print("    ");
-  Serial.print(ReceiverInputs[2]);
-  Serial.print("    ");
-  Serial.print(ReceiverInputs[3]);
-  Serial.print("    ");
-  Serial.print(ReceiverInputs[4]);
+//  Serial.print(ReceiverInputs[0]);
+//  Serial.print("    ");
+//  Serial.print(ReceiverInputs[1]);
+//  Serial.print("    ");
+//  Serial.print(ReceiverInputs[2]);
+//  Serial.print("    ");
+//  Serial.print(ReceiverInputs[3]);
+//  Serial.print("    ");
+//  Serial.print(ReceiverInputs[4]);
+//  Serial.print("    ");
+//  Serial.print(elapsedTime);
   Serial.println("");
 
 }
