@@ -27,8 +27,8 @@ void setup(){
   // Set motors.
   //MotorSetup();
   
-  
   IsArmed = false;
+  Serial.println("SETUP COMPLITED");
 }
 
 void loop(){
@@ -46,5 +46,5 @@ void loop(){
   // Write to motors.
 
   
-  Serial.println(GyroValuesDgps[1]);
+  Serial.println(GyroValuesDgps[0]);
 }

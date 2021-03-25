@@ -21,7 +21,7 @@ void CalibrateGyroError () {
   for (int i = 0; i <1000; i++) {
       Wire.beginTransmission(MPU_ADDR);
       // Starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40].
-      Wire.write(0x3B); 
+      Wire.write(0x43); 
       // The parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
       Wire.endTransmission(false); 
       // Request a total of 7*2=14 registers.
@@ -75,7 +75,7 @@ void SetGyro () {
 void ReadGyroDgps () {
   Wire.beginTransmission(MPU_ADDR);
   // Starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
-	Wire.write(0x3B); 
+	Wire.write(0x43); 
   // The parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
 	Wire.endTransmission(false); 
   // Request a total of 7*2=14 registers
