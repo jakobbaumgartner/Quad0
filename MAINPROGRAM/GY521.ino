@@ -5,8 +5,12 @@
 // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
 const int MPU_ADDR = 0x68; 
 // Variables for gyro raw data.
-int16_t gyroX, gyroY, gyroZ; 
-int16_t gyroXDgps, gyroYDgps, gyroZDgps;
+int16_t gyroX = 0; 
+int16_t gyroY = 0;
+int16_t gyroZ = 0; 
+int16_t gyroXDgps = 0;
+int16_t gyroYDgps = 0;
+int16_t gyroZDgps = 0;
 
 // Calibrate gyro error at 0 deg/s.
 void CalibrateGyroError () {

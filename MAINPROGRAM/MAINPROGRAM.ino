@@ -1,7 +1,7 @@
 #include <Servo.h>
 #include <Wire.h>
 
-Servo motor1, motor2, motor3, motor4;
+Servo Motor1, Motor2, Motor3, Motor4;
 
 // RECEIVER global variables.
 float Throttle, Yaw, Pitch, Roll;
@@ -24,11 +24,9 @@ void setup(){
   SetGyro();
   // Calibrate gyro error at 0 deg/s.
   CalibrateGyroError();
+  // Set motors.
+  //MotorSetup();
   
-  motor1.attach(8, 1000, 2000);
-  motor2.attach(9, 1000, 2000);
-  motor3.attach(10, 1000, 2000);
-  motor4.attach(11, 1000, 2000);
   
   IsArmed = false;
 }
@@ -40,31 +38,13 @@ void loop(){
   elapsedTime = (time - timePrev) / 1000;
   
   // Read receiver input.
-  Receiver();
+  //Receiver();
   // Read gyro values.
   ReadGyroDgps();
   // Calculate PIDs.
-  CalculatePid();
+  //CalculatePid();
+  // Write to motors.
 
   
-  if (IsArmed){
-    Serial.print("Throttle: ");
-    Serial.print(Throttle);
-    Serial.print("   Yaw: ");
-    Serial.print(Yaw);
-    Serial.print("   Picth: ");
-    Serial.print(Pitch);
-    Serial.print("   Roll: ");
-    Serial.print(Roll);
-    Serial.print("");
-    Serial.print("   Armed: ");
-    Serial.println(IsArmed);
-//    motor1.write(throttleMap);
-//    motor2.write(throttleMap);
-//    motor3.write(throttleMap);
-//    motor4.write(throttleMap);
-  }
-  else {
-    Serial.println("NOT ARMED!!!");
-  }  
+  Serial.println(GyroValuesDgps[1]);
 }
