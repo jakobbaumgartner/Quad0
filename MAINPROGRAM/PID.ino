@@ -1,5 +1,5 @@
 // PID calculation.
-// GLOBAL FUNCTIONS: void calculatePid().
+// GLOBAL FUNCTIONS: void CalculatePid().
 // GLOBAL VARIABLES: float YawPid, float PitchPid, float RollPid.
 
 float kpYaw, kiYaw, kdYaw, kpPitch, kiPitch, kdPitch, kpRoll, kiRoll, kdRoll;

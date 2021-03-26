@@ -5,12 +5,8 @@
 // I2C address of the MPU-6050. If AD0 pin is set to HIGH, the I2C address will be 0x69.
 const int MPU_ADDR = 0x68; 
 // Variables for gyro raw data.
-int16_t gyroX = 0; 
-int16_t gyroY = 0;
-int16_t gyroZ = 0; 
-int16_t gyroXDgps = 0;
-int16_t gyroYDgps = 0;
-int16_t gyroZDgps = 0;
+int16_t gyroX, gyroY, gyroZ;  
+int16_t gyroXDgps, gyroYDgps, gyroZDgps;
 
 // Calibrate gyro error at 0 deg/s.
 void CalibrateGyroError () {
@@ -20,7 +16,7 @@ void CalibrateGyroError () {
 
   for (int i = 0; i <1000; i++) {
       Wire.beginTransmission(MPU_ADDR);
-      // Starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40].
+      // Starting with register 0x43 (GYRO_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40].
       Wire.write(0x43); 
       // The parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
       Wire.endTransmission(false); 
@@ -74,7 +70,7 @@ void SetGyro () {
 // Read deg/s in range of 1000 deg/s.
 void ReadGyroDgps () {
   Wire.beginTransmission(MPU_ADDR);
-  // Starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
+  // Starting with register 0x43 (GYROL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
 	Wire.write(0x43); 
   // The parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
 	Wire.endTransmission(false); 
