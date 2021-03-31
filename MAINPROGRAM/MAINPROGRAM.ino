@@ -46,17 +46,17 @@ void loop(){
   // Write to motors.
 
   
-//  Serial.print(ReceiverInputs[0]);
-//  Serial.print("    ");
-//  Serial.print(ReceiverInputs[1]);
-//  Serial.print("    ");
-//  Serial.print(ReceiverInputs[2]);
-//  Serial.print("    ");
+  Serial.print(GyroValuesDgps[0]);
+  Serial.print("    ");
+  Serial.print(GyroValuesDgps[1]);  
+  Serial.print("    ");
+  Serial.print(GyroValuesDgps[2]);
+  Serial.print("    ");
 //  Serial.print(ReceiverInputs[3]);
 //  Serial.print("    ");
 //  Serial.print(ReceiverInputs[4]);
 //  Serial.print("    ");
-//  Serial.print(elapsedTime);
+  Serial.print(elapsedTime);
   Serial.println("");
 
 }
