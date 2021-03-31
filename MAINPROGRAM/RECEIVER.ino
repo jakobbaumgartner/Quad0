@@ -15,6 +15,7 @@ int currentTime;
 int timerThrottle, timerYaw, timerPitch, timerRoll, timerArm;
 int lastValueThrottle, lastValueYaw, lastValuePitch, lastValueRoll, lastValueArm;
 
+int yawCorrect, pitchCorrect, rollCorrect = 16;
 
 void InterruptSetup(){
   // Enable interrupts for pins 23:16.
@@ -48,7 +49,10 @@ ISR(PCINT2_vect){
   }
   else if(lastValueYaw == 1){
     lastValueYaw = 0;
-    ReceiverInputs[1] = currentTime - timerYaw;
+    ReceiverInputs[1] = linearCoefYaw[0] * (currentTime - timerYaw) + linearCoefYaw[1];
+    if (ReceiverInputs[1] > -16 && ReceiverInputs[1] < 16){
+      ReceiverInputs[1] = 0;
+    }
   }
 
   // Pitch (pin D6)
@@ -60,7 +64,10 @@ ISR(PCINT2_vect){
   }
   else if(lastValuePitch == 1){
     lastValuePitch = 0;
-    ReceiverInputs[2] = currentTime - timerPitch;
+    ReceiverInputs[2] = linearCoefPitch[0] * (currentTime - timerPitch) + linearCoefPitch[1];
+    if (ReceiverInputs[2] > -16 && ReceiverInputs[2] < 16){
+      ReceiverInputs[2] = 0;
+    }
   }
 
   // Roll (pin D7)
@@ -73,6 +80,11 @@ ISR(PCINT2_vect){
   else if(lastValueRoll == 1){
     lastValueRoll = 0;
     ReceiverInputs[3] = currentTime - timerRoll;
+    if (ReceiverInputs[3] > 1484 && ReceiverInputs[3] < 1516){
+      ReceiverInputs[3] = 1500;
+    }
+    ReceiverInputs[3] = linearCoefRoll[0] * (ReceiverInputs[3]) + linearCoefRoll[1];
+
   }
 
   // Arm (pin D3)
@@ -88,6 +100,16 @@ ISR(PCINT2_vect){
   }
 }
 
+void LinearScaling(int nL[], int nH[]){
+   linearCoefYaw[0] = -2000 / (-1000 + nL[0] - nH[0]);
+   linearCoefYaw[1] = -(3000 + nL[0] + nH[0]) * linearCoefYaw[0] / 2;
+
+   linearCoefPitch[0] = -2000 / (-1000 + nL[1] - nH[1]);
+   linearCoefPitch[1] = -(3000 + nL[1] + nH[1]) * linearCoefPitch[0] / 2;
+
+   linearCoefRoll[0] = -2000 / (-1000 + nL[2] - nH[2]);
+   linearCoefRoll[1] = -(3000 + nL[2] + nH[2]) * linearCoefRoll[0] / 2;
+}
 //void Receiver(){
 //  currentTime = micros();
 //

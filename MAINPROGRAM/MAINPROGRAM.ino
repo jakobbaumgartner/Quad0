@@ -5,8 +5,14 @@ Servo Motor1, Motor2, Motor3, Motor4;
 
 // RECEIVER global variables.
 float Throttle, Yaw, Pitch, Roll;
+// Index: 0 - Throttle, 1 - Yaw, 2 - Pitch, 3 - Roll, 4 - Arm.
 float ReceiverInputs[5];
 bool IsArmed;
+float linearCoefYaw[2];
+float linearCoefPitch[2];
+float linearCoefRoll[2];
+int nL[3] = {0, 0, 80};
+int nH[3] = {-4, -12, 0};
 
 // GY521 global variables.
 float GyroValuesDgps[3];
@@ -28,6 +34,8 @@ void setup(){
   CalibrateGyroError();
   // Set motors.
   MotorSetup();
+  // Receiver calibration.
+  LinearScaling(nL, nH);
   
   IsArmed = false;
   Serial.println("SETUP COMPLETED");
@@ -38,7 +46,7 @@ void loop(){
   timePrev = time;
   time = millis();
   elapsedTime = (time - timePrev) / 1000;
-  
+
   // Read gyro values.
   ReadGyroDgps();
   // Calculate PIDs.
@@ -46,16 +54,14 @@ void loop(){
   // Write to motors.
 
   
-  Serial.print(GyroValuesDgps[0]);
+  Serial.print(ReceiverInputs[0]);
   Serial.print("    ");
-  Serial.print(GyroValuesDgps[1]);  
+  Serial.print(ReceiverInputs[1]);  
   Serial.print("    ");
-  Serial.print(GyroValuesDgps[2]);
+  Serial.print(ReceiverInputs[2]);
   Serial.print("    ");
-//  Serial.print(ReceiverInputs[3]);
-//  Serial.print("    ");
-//  Serial.print(ReceiverInputs[4]);
-//  Serial.print("    ");
+  Serial.print(ReceiverInputs[3]);
+  Serial.print("    ");
   Serial.print(elapsedTime);
   Serial.println("");
 
