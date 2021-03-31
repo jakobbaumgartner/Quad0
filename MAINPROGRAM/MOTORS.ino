@@ -8,8 +8,8 @@ void MotorSetup(){
 }
 
 void MotorMixingAlgorithm(){
-  Motor1.write(Throttle);
-  Motor2.write(Throttle);
-  Motor3.write(Throttle);
-  Motor4.write(Throttle);
+  Motor1.write(ReceiverInputs[0] - abs(YawPid) + abs(PitchPid) - abs(RollPid));
+  Motor2.write(ReceiverInputs[0] + abs(YawPid) + abs(PitchPid) + abs(RollPid));
+  Motor3.write(ReceiverInputs[0] + abs(YawPid) - abs(PitchPid) + abs(RollPid));
+  Motor4.write(ReceiverInputs[0] - abs(YawPid) - abs(PitchPid) + abs(RollPid));
 }

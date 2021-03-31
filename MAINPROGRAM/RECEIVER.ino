@@ -15,7 +15,7 @@ int currentTime;
 int timerThrottle, timerYaw, timerPitch, timerRoll, timerArm;
 int lastValueThrottle, lastValueYaw, lastValuePitch, lastValueRoll, lastValueArm;
 
-int yawCorrect, pitchCorrect, rollCorrect = 16;
+
 
 void InterruptSetup(){
   // Enable interrupts for pins 23:16.
@@ -38,6 +38,9 @@ ISR(PCINT2_vect){
   else if(lastValueThrottle == 1){
     lastValueThrottle = 0;
     ReceiverInputs[0] = currentTime - timerThrottle;
+    if (ReceiverInputs[0] > 1800){
+      ReceiverInputs[0] = 1800;
+    }
   }
 
   // Yaw (pin D4)
@@ -49,7 +52,7 @@ ISR(PCINT2_vect){
   }
   else if(lastValueYaw == 1){
     lastValueYaw = 0;
-    ReceiverInputs[1] = linearCoefYaw[0] * (currentTime - timerYaw) + linearCoefYaw[1];
+    ReceiverInputs[1] = LinearCoefYaw[0] * (currentTime - timerYaw) + LinearCoefYaw[1];
     if (ReceiverInputs[1] > -16 && ReceiverInputs[1] < 16){
       ReceiverInputs[1] = 0;
     }
@@ -64,7 +67,7 @@ ISR(PCINT2_vect){
   }
   else if(lastValuePitch == 1){
     lastValuePitch = 0;
-    ReceiverInputs[2] = linearCoefPitch[0] * (currentTime - timerPitch) + linearCoefPitch[1];
+    ReceiverInputs[2] = LinearCoefPitch[0] * (currentTime - timerPitch) + LinearCoefPitch[1];
     if (ReceiverInputs[2] > -16 && ReceiverInputs[2] < 16){
       ReceiverInputs[2] = 0;
     }
@@ -79,12 +82,10 @@ ISR(PCINT2_vect){
   }
   else if(lastValueRoll == 1){
     lastValueRoll = 0;
-    ReceiverInputs[3] = currentTime - timerRoll;
-    if (ReceiverInputs[3] > 1484 && ReceiverInputs[3] < 1516){
-      ReceiverInputs[3] = 1500;
+    ReceiverInputs[3] = LinearCoefRoll[0] * (currentTime - timerRoll) + LinearCoefRoll[1];
+    if (ReceiverInputs[3] > -18 && ReceiverInputs[3] < 18){
+      ReceiverInputs[3] = 0;
     }
-    ReceiverInputs[3] = linearCoefRoll[0] * (ReceiverInputs[3]) + linearCoefRoll[1];
-
   }
 
   // Arm (pin D3)
@@ -101,14 +102,14 @@ ISR(PCINT2_vect){
 }
 
 void LinearScaling(int nL[], int nH[]){
-   linearCoefYaw[0] = -2000 / (-1000 + nL[0] - nH[0]);
-   linearCoefYaw[1] = -(3000 + nL[0] + nH[0]) * linearCoefYaw[0] / 2;
+   LinearCoefYaw[0] = -2000 / (-1000 + nL[0] - nH[0]);
+   LinearCoefYaw[1] = -(3000 + nL[0] + nH[0]) * LinearCoefYaw[0] / 2;
 
-   linearCoefPitch[0] = -2000 / (-1000 + nL[1] - nH[1]);
-   linearCoefPitch[1] = -(3000 + nL[1] + nH[1]) * linearCoefPitch[0] / 2;
+   LinearCoefPitch[0] = -2000 / (-1000 + nL[1] - nH[1]);
+   LinearCoefPitch[1] = -(3000 + nL[1] + nH[1]) * LinearCoefPitch[0] / 2;
 
-   linearCoefRoll[0] = -2000 / (-1000 + nL[2] - nH[2]);
-   linearCoefRoll[1] = -(3000 + nL[2] + nH[2]) * linearCoefRoll[0] / 2;
+   LinearCoefRoll[0] = -2000 / (-1000 + nL[2] - nH[2]);
+   LinearCoefRoll[1] = -(3000 + nL[2] + nH[2]) * LinearCoefRoll[0] / 2;
 }
 //void Receiver(){
 //  currentTime = micros();
